@@ -1,0 +1,37 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f7f7f7;
+  color: #222;
+  min-height: 100vh;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  color: #44883e;
+}
+
+a {
+  color: #44883e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+figure {
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+}
+
+figcaption {
+  font-size: 0.95em;
+  color: #555;
+  margin-top: 0.5em;
+}
