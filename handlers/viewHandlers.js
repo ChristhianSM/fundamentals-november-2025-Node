@@ -1,7 +1,7 @@
 import { getLayout } from "../utils/layout.js";
 import { sendHtml } from "../utils/response.js";
 
-export function getHome(req, res) {
+export async function getHome(req, res) {
   const content = `
     <h1>Bienvenido a Vanilla Node Web Server</h1>
     <section>
@@ -18,5 +18,30 @@ export function getHome(req, res) {
     </section>
   `;
   const html = getLayout("Inicio", content);
+  sendHtml(res, html);
+}
+
+export async function getNewContact(req, res) {
+  const content = `
+    <section>
+      <h2>Formulario de Contacto</h2>
+      <form action="/contact" method="POST">
+        <div>
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div>
+          <label for="email">Correo electrónico:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+          <label for="message">Mensaje:</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  `;
+  const html = getLayout("Contacto", content);
   sendHtml(res, html);
 }
