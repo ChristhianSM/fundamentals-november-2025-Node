@@ -1,10 +1,12 @@
 import path from "node:path";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { parseUrlEncoded } from "../utils/parseBody.js";
-import { sendHtml, sendJson } from "../utils/response.js";
+import { sendErrorHtml, sendHtml, sendJson } from "../utils/response.js";
 import { getLayout } from "../utils/layout.js";
+import { HttpError } from "../utils/errors.js";
 
 export async function getHealth(req, res) {
+  // throw new HttpError("Error con la base de datos", 400);
   const data = { status: "ok" };
   sendJson(res, data);
 }
@@ -18,19 +20,17 @@ const DATA_DIR = path.join(import.meta.dirname, "../data"); // D:\\Cursos\\Codea
 const MESSAGE_FILE = path.join(DATA_DIR, "message.json");
 
 export async function postContact(req, res) {
-  console.log({ DATA_DIR, MESSAGE_FILE });
   let body;
   try {
     body = await parseUrlEncoded(req);
   } catch {
-    res.writeHead(500);
-    return res.end();
+    throw new HttpError("Error en el servidor", 400);
   }
 
   const { name, email, message } = body;
   if (!name || !email || !message) {
-    res.writeHead(400);
-    return res.end();
+    /* res, message, status = 500 */
+    throw new HttpError("Faltan completar Datos", 400);
   }
 
   let messages = [
@@ -44,15 +44,16 @@ export async function postContact(req, res) {
     const data = await readFile(MESSAGE_FILE, "utf-8");
     messages = JSON.parse(data);
   } catch (error) {
-    console.log(error);
+    const status = 500;
+    const message = "Error interno del servidor";
+
     if (error.code === "ENOENT") {
       await mkdir(DATA_DIR, { recursive: true });
       // 1. Si "/data/" no existe → LO CREA
       // 2. Si "/data/message.json" no existe → LO CREA
       // 3. Si "/data/message.json" ya existe → NO HACE NADA (no da error)
     } else {
-      res.writeHead(500);
-      return res.end();
+      return sendErrorHtml(res, "Error del servidor", 500);
     }
   }
 

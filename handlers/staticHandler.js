@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import mime from "mime-types";
+import { HttpError } from "../utils/errors.js";
 
 const PUBLIC_DIR = path.resolve("public");
 
@@ -15,12 +16,15 @@ export async function staticHandler(req, res, pathname) {
     return res.end(data);
   } catch (error) {
     let status = 500;
+    let message = "Error Interno del servidor";
     if (error.code === "ENOENT" || error.code === "EISDIR") {
-      status = 400;
-    } else if (error.code === "EACCES") {
+      status = 404;
+      message = "Recurso no encontrado";
+    } else if (error.code === "EACCES" || error.code === "EPERM") {
       status = 403;
+      message = "Permisos denegados";
     }
-    res.writeHead(status);
-    return res.end();
+
+    throw new HttpError(message, status);
   }
 }
