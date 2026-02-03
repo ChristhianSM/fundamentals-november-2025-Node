@@ -7,4 +7,6 @@ const server = http.createServer(async (req, res) => {
   router(req, res);
 });
 
-server.listen(PORT);
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});

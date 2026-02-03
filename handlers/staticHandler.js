@@ -3,11 +3,11 @@ import path from "node:path";
 import mime from "mime-types";
 import { HttpError } from "../utils/errors.js";
 
-const PUBLIC_DIR = path.resolve("public");
+const PUBLIC_DIR = path.resolve("public"); // /node/public
 
 export async function staticHandler(req, res, pathname) {
-  const filePath = path.join(PUBLIC_DIR, pathname);
-  const extname = path.extname(pathname).toLowerCase();
+  const filePath = path.join(PUBLIC_DIR, pathname); // /node/public/node.jpg
+  const extname = path.extname(pathname).toLowerCase(); //.jpg
   const mimeType = mime.lookup(extname) || "application/octet-stream";
 
   try {

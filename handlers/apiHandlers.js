@@ -1,33 +1,27 @@
 import path from "node:path";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { parseUrlEncoded } from "../utils/parseBody.js";
-import { sendErrorHtml, sendHtml, sendJson } from "../utils/response.js";
+// import { parseUrlEncoded } from "../utils/parseBody.js";
+import { sendErrorHtml, sendHtml } from "../utils/response.js";
 import { getLayout } from "../utils/layout.js";
 import { HttpError } from "../utils/errors.js";
 
 export async function getHealth(req, res) {
   // throw new HttpError("Error con la base de datos", 400);
   const data = { status: "ok" };
-  sendJson(res, data);
+  res.json(data);
 }
 
 export async function getTime(req, res) {
   const data = { time: new Date().toISOString() };
-  sendJson(res, data);
+  res.json(data);
 }
 
 const DATA_DIR = path.join(import.meta.dirname, "../data"); // D:\\Cursos\\Codeable Curso\\node\\handlers unir ../data
 const MESSAGE_FILE = path.join(DATA_DIR, "message.json");
 
 export async function postContact(req, res) {
-  let body;
-  try {
-    body = await parseUrlEncoded(req);
-  } catch {
-    throw new HttpError("Error en el servidor", 400);
-  }
+  const { name, email, message } = req.body;
 
-  const { name, email, message } = body;
   if (!name || !email || !message) {
     /* res, message, status = 500 */
     throw new HttpError("Faltan completar Datos", 400);
