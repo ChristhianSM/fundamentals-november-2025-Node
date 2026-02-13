@@ -8,8 +8,8 @@
     "node": ">=24.13.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
+    "start": "node app.js",
+    "dev": "node --watch app.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
